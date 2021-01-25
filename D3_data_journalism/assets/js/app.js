@@ -24,24 +24,20 @@ var chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 
-// Import Data
-// Load data for D3 Journalism data
+// Import Data and load data for D3 Journalism data
 d3.csv("assets/data/data.csv").then(function (censusData) {
 
-    // Data
-    console.log(censusData);
+    // // Data
+    // console.log(censusData);
 
     // Parse Data/Cast as numbers
-    // ==============================
-    censusData.forEach(function (data) {
+       censusData.forEach(function (data) {
         data.smokes = +data.smokes;
         data.age = +data.age;
     });
 
     // Create scale functions
-    // ==============================
-
-    var yLinearScale = d3.scaleLinear()
+   var yLinearScale = d3.scaleLinear()
         .domain([d3.min(censusData, d => d.smokes) - 2, d3.max(censusData, d => d.smokes) + 2])
         .range([chartHeight, 0]);
 
@@ -49,13 +45,11 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         .domain([d3.min(censusData, d => d.age) - 1, d3.max(censusData, d => d.age) + 1])
         .range([0, chartWidth]);
 
-    // Step 3: Create axis functions
-    // ==============================
+    // Create axis functions
     var yAxis = d3.axisLeft(yLinearScale);
     var xAxis = d3.axisBottom(xLinearScale);
 
-    // Step 4: Append Axes to the chart
-    // ==============================
+    // Append Axes to the chart
     chartGroup.append("g")
         .attr("transform", `translate(0, ${chartHeight})`)
         .call(xAxis);
@@ -64,8 +58,7 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         .call(yAxis);
 
     // Create Circles
-    // ==============================
-    var circeLabel = chartGroup.selectAll("circle")
+  var circeLabel = chartGroup.selectAll("circle")
         .data(censusData)
         .enter()
         .append("circle")
@@ -78,7 +71,6 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
 
 
     // Initialize tool tip
-    // ==============================
     var toolTip = d3.tip()
         .attr("class", "d3-tip")
         .offset([0, 0])
@@ -87,11 +79,9 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         });
 
     // Create tooltip in the chart
-    // ==============================
     svg.call(toolTip);
 
     // Create event listeners to display and hide the tooltip
-    // ==============================
     // mouseclick event
     circeLabel.on("click", function (data) {
         toolTip.show(data, this);
@@ -105,8 +95,8 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         toolTip.hide(data, this);
     });
 
-    // Create axes labels
-    // ==============================
+    // Create axes labels and state abbreviations
+
     chartGroup.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 0 - margin.left + 37)
@@ -124,8 +114,8 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         .attr("font-size", "16px")
         .text("Age (%)");
 
-    // State Abbreviation in the Cirles
-    chartGroup.append("text")
+    // State Abbreviation in the Circles
+   chartGroup.append("text")
         .attr("class", "stateText")
         .style("font-size", "10px")
         .style("font-weight", "bold")
