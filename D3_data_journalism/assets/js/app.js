@@ -1,5 +1,5 @@
 // svg container
-var svgHeight = 700;
+var svgHeight = 800;
 var svgWidth = 900;
 
 // margins
@@ -34,19 +34,19 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
     // Parse Data/Cast as numbers
     // ==============================
     censusData.forEach(function (data) {
-        data.healthcare = +data.healthcare;
-        data.poverty = +data.poverty;
+        data.smokes = +data.smokes;
+        data.age = +data.age;
     });
 
     // Create scale functions
     // ==============================
 
     var yLinearScale = d3.scaleLinear()
-        .domain([d3.min(censusData, d => d.healthcare) - 2, d3.max(censusData, d => d.healthcare) + 2])
+        .domain([d3.min(censusData, d => d.smokes) - 2, d3.max(censusData, d => d.smokes) + 2])
         .range([chartHeight, 0]);
 
     var xLinearScale = d3.scaleLinear()
-        .domain([d3.min(censusData, d => d.poverty) - 1, d3.max(censusData, d => d.poverty) + 1])
+        .domain([d3.min(censusData, d => d.age) - 1, d3.max(censusData, d => d.age) + 1])
         .range([0, chartWidth]);
 
     // Step 3: Create axis functions
@@ -65,12 +65,12 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
 
     // Create Circles
     // ==============================
-    var circlesGroup = chartGroup.selectAll("circle")
+    var circeLabel = chartGroup.selectAll("circle")
         .data(censusData)
         .enter()
         .append("circle")
-        .attr("cy", d => yLinearScale(d.healthcare))
-        .attr("cx", d => xLinearScale(d.poverty))
+        .attr("cy", d => yLinearScale(d.smokes))
+        .attr("cx", d => xLinearScale(d.age))
         .attr("r", "10")
         .attr("opacity", "0.75")
         .attr("class", "stateCircle")
@@ -83,7 +83,7 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         .attr("class", "d3-tip")
         .offset([0, 0])
         .html(function (d) {
-            return (`<strong>${d.state}</br></br>Lacks Healthcare (%):</br>${d.healthcare}</br></br>In Poverty (%):</br> ${d.poverty}<strong>`);
+            return (`<strong>${d.state}</br></br>Smokers(%):</br>${d.smokes}</br></br>Age (%):</br> ${d.age}<strong>`);
         });
 
     // Create tooltip in the chart
@@ -93,15 +93,15 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
     // Create event listeners to display and hide the tooltip
     // ==============================
     // mouseclick event
-    circlesGroup.on("click", function (data) {
+    circeLabel.on("click", function (data) {
         toolTip.show(data, this);
     });
     // onmouseover event
-    circlesGroup.on("mouseover", function (data) {
+    circeLabel.on("mouseover", function (data) {
         toolTip.show(data, this);
     });
     // onmouseout event
-    circlesGroup.on("mouseout", function (data) {
+    circeLabel.on("mouseout", function (data) {
         toolTip.hide(data, this);
     });
 
@@ -109,16 +109,20 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
     // ==============================
     chartGroup.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left + 40)
+        .attr("y", 0 - margin.left + 37)
         .attr("x", 0 - (chartHeight / 2))
         .attr("dy", "1em")
         .attr("class", "axisText")
-        .text("Lacks Healthcare (%)");
+        .attr("font-size", "16px")
+        .attr("fill", "green")
+        .text("Smokers (%)");
 
     chartGroup.append("text")
         .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margin.top + 30})`)
         .attr("class", "axisText")
-        .text("Poverty (%)");
+        .attr("fill", "orange")
+        .attr("font-size", "16px")
+        .text("Age (%)");
 
     // State Abbreviation in the Cirles
     chartGroup.append("text")
@@ -129,17 +133,12 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         .data(censusData)
         .enter()
         .append("tspan")
-        .attr("x", function (data) {
-            return xLinearScale(data.poverty);
-        })
-        .attr("y", function (data) {
-            return yLinearScale(data.healthcare - 0.2);
-        })
-        .text(function (data) {
-            return data.abbr
-        });
+        .attr("x", data => xLinearScale(data.age))
+        .attr("y", data => yLinearScale(data.smokes - 0.1))
+        .text(data => data.abbr);
 
 }).catch(function (error) {
     console.log(error);
 
 });
+
