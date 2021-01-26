@@ -19,7 +19,6 @@ var svg = d3.select("#scatter").append("svg")
     .attr("height", svgHeight)
     .attr("width", svgWidth);
 
-// shift everything over by the margins
 var chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
@@ -70,7 +69,7 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         .attr("stroke", "black");
 
 
-    // Initialize tool tip
+    // Set tool tip
     var toolTip = d3.tip()
         .attr("class", "d3-tip")
         .offset([0, 0])
@@ -81,7 +80,7 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
     // Create tooltip in the chart
     svg.call(toolTip);
 
-    // Create event listeners to display and hide the tooltip
+    // Create event listenersd to display and hide the tooltip
     // mouseclick event
     circeLabel.on("click", function (data) {
         toolTip.show(data, this);
