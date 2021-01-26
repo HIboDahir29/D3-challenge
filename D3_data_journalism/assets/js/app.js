@@ -30,19 +30,20 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
     // console.log(censusData);
 
     // Parse Data/Cast as numbers
-       censusData.forEach(function (data) {
+    censusData.forEach(function (data) {
         data.smokes = +data.smokes;
         data.age = +data.age;
     });
 
     // Create scale functions
-   var yLinearScale = d3.scaleLinear()
-        .domain([d3.min(censusData, d => d.smokes) - 2, d3.max(censusData, d => d.smokes) + 2])
-        .range([chartHeight, 0]);
 
     var xLinearScale = d3.scaleLinear()
         .domain([d3.min(censusData, d => d.age) - 1, d3.max(censusData, d => d.age) + 1])
         .range([0, chartWidth]);
+
+    var yLinearScale = d3.scaleLinear()
+        .domain([d3.min(censusData, d => d.smokes) - 2, d3.max(censusData, d => d.smokes) + 2])
+        .range([chartHeight, 0]);
 
     // Create axis functions
     var yAxis = d3.axisLeft(yLinearScale);
@@ -57,7 +58,7 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         .call(yAxis);
 
     // Create Circles
-  var circeLabel = chartGroup.selectAll("circle")
+    var circeLabel = chartGroup.selectAll("circle")
         .data(censusData)
         .enter()
         .append("circle")
@@ -114,7 +115,7 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         .text("Age (%)");
 
     // State Abbreviation in the Circles
-   chartGroup.append("text")
+    chartGroup.append("text")
         .attr("class", "stateText")
         .style("font-size", "10px")
         .style("font-weight", "bold")
